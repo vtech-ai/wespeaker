@@ -26,6 +26,7 @@ def get_args():
                             'similarity',
                             'diarization',
                             'diarization_list',
+                            'similarity_by_segments'
                         ],
                         default='embedding',
                         help='task type')
