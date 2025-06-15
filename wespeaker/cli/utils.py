@@ -111,5 +111,13 @@ def get_args():
                         type=bool,
                         default=True,
                         help='do cmn after or before fbank sub-segmentation')
+    parser.add_argument('--diar_seg_file',
+                        type=str,
+                        default=None,
+                        help='segment file for diarization')
+    parser.add_argument('--speaker_reference_audio',
+                        type=str,
+                        default=None,
+                        help='reference audio for speaker recognition')
     args = parser.parse_args()
     return args

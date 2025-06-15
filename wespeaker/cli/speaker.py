@@ -329,7 +329,9 @@ def load_segments(seg_file: str) -> list[tuple[float, float]]:
     segments = []
     json_file = json.load(open(seg_file))
     for item in json_file:
-        segments.append((item['start'], item['end']))
+        start = hhmmss_to_seconds(item['start_timestamp'])
+        end = hhmmss_to_seconds(item['end_timestamp'])
+        segments.append((start, end))
     return segments
 
 def load_model(language: str) -> Speaker:
@@ -339,6 +341,35 @@ def load_model(language: str) -> Speaker:
 
 def load_model_local(model_dir: str) -> Speaker:
     return Speaker(model_dir)
+
+
+def hhmmss_to_seconds(time_str: str) -> float:
+    """
+    把 HH:MM:SS 或 HH:MM:SS.sss 格式字符串转换成总秒数（浮点数）
+    
+    例子:
+    "03:12"    -> 192.0
+    "03:12.456" -> 192.456
+    "01:03:12" -> 3792.0
+    "01:03:12.456" -> 3792.456
+    """
+    try:
+        parts = time_str.split(":")
+        hours = 0
+        if len(parts) == 2:
+            minutes = int(parts[0])
+            seconds = float(parts[1])
+        elif len(parts) == 3:
+            hours = int(parts[0])
+            minutes = int(parts[1])
+            seconds = float(parts[2])
+        else:
+            raise ValueError(f"Invalid time format: {time_str}")
+        
+        total_seconds = hours * 3600 + minutes * 60 + seconds
+        return total_seconds
+    except Exception as e:
+        raise ValueError(f"Error parsing time string '{time_str}': {e}")
 
 
 def main():
@@ -396,9 +427,9 @@ def main():
         assert args.output_file is not None
         model.make_rttm(np.vstack(segment2labels), args.output_file)
     elif args.task == 'similarity_by_segments':
-        assert args.seg_file and args.reference_audio is not None
-        segments = load_segments(args.seg_file)
-        ref_embedding = model.extract_embedding(args.reference_audio)
+        assert args.diar_seg_file and args.speaker_reference_audio is not None
+        segments = load_segments(args.diar_seg_file)
+        ref_embedding = model.extract_embedding(args.speaker_reference_audio)
         print(model.compute_similarity_by_segments(args.audio_file, segments, ref_embedding))
     else:
         print('Unsupported task {}'.format(args.task))

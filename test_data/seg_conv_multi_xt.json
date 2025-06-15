@@ -1,0 +1,110 @@
+[
+  {
+    "type": "dialogue",
+    "start_timestamp": "00:00.000",
+    "end_timestamp": "00:02.100",
+    "transcript": "就是现在这种供应商的厂商其实特别多。"
+  },
+  {
+    "type": "dialogue",
+    "start_timestamp": "00:02.100",
+    "end_timestamp": "00:02.900",
+    "transcript": "特别多我觉得。"
+  },
+  {
+    "type": "dialogue",
+    "start_timestamp": "00:02.900",
+    "end_timestamp": "00:05.700",
+    "transcript": "对,在深圳就是一堆这样的提供芯片的公司。"
+  },
+  {
+    "type": "dialogue",
+    "start_timestamp": "00:05.700",
+    "end_timestamp": "00:09.300",
+    "transcript": "因为都是ESP32就直接就 对 就搞了嘛。"
+  },
+  {
+    "type": "dialogue",
+    "start_timestamp": "00:09.300",
+    "end_timestamp": "00:12.300",
+    "transcript": "再加个喇叭,加个电池就就直接就搞了。"
+  },
+  {
+    "type": "dialogue",
+    "start_timestamp": "00:12.900",
+    "end_timestamp": "00:19.000",
+    "transcript": "但我觉得这还不够,我觉得说感觉这有点太偏 太太粗糙了。"
+  },
+  {
+    "type": "dialogue",
+    "start_timestamp": "00:19.700",
+    "end_timestamp": "00:21.000",
+    "transcript": "就是太初期了。"
+  },
+  {
+    "type": "dialogue",
+    "start_timestamp": "00:21.000",
+    "end_timestamp": "00:21.200",
+    "transcript": "对。"
+  },
+  {
+    "type": "dialogue",
+    "start_timestamp": "00:21.200",
+    "end_timestamp": "00:23.900",
+    "transcript": "就是我们想要的可能更多的是"
+  },
+  {
+    "type": "dialogue",
+    "start_timestamp": "00:23.900",
+    "end_timestamp": "00:28.900",
+    "transcript": "对吧,就是我把这个模块定义好,然后完了之后你可能只要配置一下就可以上线了那种。"
+  },
+  {
+    "type": "dialogue",
+    "start_timestamp": "00:28.900",
+    "end_timestamp": "00:32.400",
+    "transcript": "嗯,对,现在他们就是提供 就是这样。就是这样。"
+  },
+  {
+    "type": "dialogue",
+    "start_timestamp": "00:32.400",
+    "end_timestamp": "00:33.000",
+    "transcript": "OK。"
+  },
+  {
+    "type": "dialogue",
+    "start_timestamp": "00:33.000",
+    "end_timestamp": "00:44.200",
+    "transcript": "因为这个门槛是比较没有那么高啊,因为就是因为他们对物联网要求不是说就或者他们不是做手机的对吧,是这种主板难度和这个芯片复杂度都是很一边的,很一个事。"
+  },
+  {
+    "type": "dialogue",
+    "start_timestamp": "00:44.200",
+    "end_timestamp": "00:45.000",
+    "transcript": "OK,OK。"
+  },
+  {
+    "type": "dialogue",
+    "start_timestamp": "00:45.400",
+    "end_timestamp": "00:51.900",
+    "transcript": "我们现在核心的需求是 有技术的大牛能够把我们更多的 功能和想法。"
+  },
+  {
+    "type": "dialogue",
+    "start_timestamp": "00:52.000",
+    "end_timestamp": "00:54.300",
+    "transcript": "我们依然觉得产品是定向化的。"
+  },
+  {
+    "type": "dialogue",
+    "start_timestamp": "00:54.300",
+    "end_timestamp": "00:55.000",
+    "transcript": "嗯嗯。"
+  },
+  {
+    "type": "dialogue",
+    "start_timestamp": "00:55.000",
+    "end_timestamp": "00:59.340",
+    "transcript": "就是我们满足的这群人,他首先要是一个 有"
+  }
+]
