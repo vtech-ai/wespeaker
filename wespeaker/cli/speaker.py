@@ -24,6 +24,7 @@ import torchaudio.compliance.kaldi as kaldi
 import yaml
 import kaldiio
 from tqdm import tqdm
+import json
 
 from wespeaker.cli.hub import Hub
 from wespeaker.cli.utils import get_args
@@ -129,6 +130,31 @@ class Speaker:
                                            normalize=self.wavform_norm)
         return self.extract_embedding_from_pcm(pcm, sample_rate)
 
+    def extract_embeddings_by_segments(self, audio_path: str, segments: list[tuple[float, float]]):
+        pcm, sample_rate = torchaudio.load(audio_path,
+                                           normalize=self.wavform_norm)
+        embeddings = []
+        for segment in segments:
+            start, end = segment
+            pcm_segment = pcm[0, int(start * sample_rate):int(end * sample_rate)]
+            pcm_segment = pcm_segment.unsqueeze(0)
+            pcm_segment = pcm_segment.to(torch.float)
+            if sample_rate != self.resample_rate:
+                pcm_segment = torchaudio.transforms.Resample(
+                    orig_freq=sample_rate, new_freq=self.resample_rate)(pcm_segment)
+            feats = self.compute_fbank(pcm_segment,
+                                    sample_rate=self.resample_rate,
+                                    cmn=True)
+            feats = feats.unsqueeze(0)
+            feats = feats.to(self.device)
+
+            with torch.no_grad():
+                outputs = self.model(feats)
+                outputs = outputs[-1] if isinstance(outputs, tuple) else outputs
+            embedding = outputs[0].to(torch.device('cpu'))
+            embeddings.append(embedding)
+        return embeddings
+
     def extract_embedding_from_pcm(self, pcm: torch.Tensor, sample_rate: int):
         if self.apply_vad:
             # TODO(Binbin Zhang): Refine the segments logic, here we just
@@ -171,6 +197,7 @@ class Speaker:
         embedding = outputs[0].to(torch.device('cpu'))
         return embedding
 
+
     def extract_embedding_list(self, scp_path: str):
         names = []
         embeddings = []
@@ -189,6 +216,12 @@ class Speaker:
             return 0.0
         else:
             return self.cosine_similarity(e1, e2)
+
+    def compute_similarity_by_segments(self, audio_path: str, 
+                                       segments: list[tuple[float, float]], 
+                                       reference_embedding: torch.Tensor) -> list[float]:
+        embeddings = self.extract_embeddings_by_segments(audio_path, segments)
+        return [self.cosine_similarity(embedding, reference_embedding) for embedding in embeddings]
 
     def cosine_similarity(self, e1, e2):
         cosine_score = torch.dot(e1, e2) / (torch.norm(e1) * torch.norm(e2))
@@ -291,7 +324,13 @@ class Speaker:
                     "SPEAKER {} {} {:.3f} {:.3f} <NA> <NA> {} <NA> <NA>\n".
                     format(utt, 1, float(begin),
                            float(end) - float(begin), label))
-
+                
+def load_segments(seg_file: str) -> list[tuple[float, float]]:
+    segments = []
+    json_file = json.load(open(seg_file))
+    for item in json_file:
+        segments.append((item['start'], item['end']))
+    return segments
 
 def load_model(language: str) -> Speaker:
     model_path = Hub.get_model(language)
@@ -356,6 +395,11 @@ def main():
         utts, segment2labels = model.diarize_list(args.wav_scp)
         assert args.output_file is not None
         model.make_rttm(np.vstack(segment2labels), args.output_file)
+    elif args.task == 'similarity_by_segments':
+        assert args.seg_file and args.reference_audio is not None
+        segments = load_segments(args.seg_file)
+        ref_embedding = model.extract_embedding(args.reference_audio)
+        print(model.compute_similarity_by_segments(args.audio_file, segments, ref_embedding))
     else:
         print('Unsupported task {}'.format(args.task))
         sys.exit(-1)
